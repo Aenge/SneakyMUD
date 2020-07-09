@@ -1,0 +1,6 @@
+#General
+  name: SneakyMud
+  player_limit: 100 #(int) Max simultaneous players allowed
+#Network
+  protocol: 235     #(int) Client version to be compatible with
+  port: 43594       #(int) Port to listen on

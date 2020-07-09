@@ -7,11 +7,19 @@
 
 using namespace sneaky;
 
-Server::Server(const std::string& a_name, const int& a_port, const int& a_maxConnections, const IO::Net::Protocol& a_protocol) : m_name(a_name), m_protocol(a_protocol) {
-    if (a_protocol == IO::Net::Protocol::p204) {        
+Server::Server(const std::string& a_configPath) {
+    if (!a_configPath.empty()) {
+        if (m_configuration.load(a_configPath)) {
+            std::cout << "[Server] Config successfully loaded" << std::endl;
+        }
+        else {
+            std::cerr << "[Error] Error loading config" << std::endl;
+            return;
+        }
     }
-    else if (a_protocol == IO::Net::Protocol::p235) {
-        m_networkHandler = std::make_shared<IO::Net::Net235>(a_port, a_maxConnections);
+
+    if (m_configuration.NETWORK_PROTOCOL == IO::Net::Protocol::p235) {
+        m_networkHandler = std::make_shared<IO::Net::Net235>(m_configuration.NETWORK_PORT, m_configuration.SERVER_PLAYER_LIMIT);
     }
 }
 
@@ -23,12 +31,13 @@ void Server::loop() {
 
 void Server::start() {
     if (m_networkHandler == nullptr) {
-        std::cerr << "Invalid protocol selected" << std::endl;
+        std::cerr << "[Error] No valid protocol specified" << std::endl;
         return;
     }
+
     std::thread t(
         [this]() {
-            std::cout << m_name << " starting.." << std::endl;
+            std::cout << "[" << m_configuration.SERVER_NAME << "] Starting on port " << m_configuration.NETWORK_PORT << std::endl;
             try {
                 m_networkHandler->listen();
                 m_networkHandler->getIOService()->run();
@@ -41,6 +50,6 @@ void Server::start() {
     loop();
 }
 
-const std::string& Server::getName() {
-	return m_name;
+const IO::Configuration& Server::getConfig() {
+    return m_configuration;
 }

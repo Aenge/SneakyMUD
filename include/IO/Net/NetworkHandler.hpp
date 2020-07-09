@@ -24,7 +24,7 @@ namespace Net {
 	};
 
 	enum class Protocol {
-		p204,
-		p235
+		p204 = 204,
+		p235 = 235
 	};
 }}}
