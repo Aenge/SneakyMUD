@@ -16,6 +16,9 @@ namespace IO {
 		//Network
 		Net::Protocol NETWORK_PROTOCOL{ Net::Protocol::p235 };
 		int NETWORK_PORT{ 43594 };
-		
+
+		//Definitions
+		std::string DEF_NPC{ "" };
+		std::string DEF_SCENERY{ "" };
 	};
 } }

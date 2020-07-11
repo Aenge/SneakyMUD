@@ -12,14 +12,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    sneaky::Server server(configPath);
-    server.start();    
+    sneaky::Server server;
+    if (server.init(configPath))
+        server.start();    
     return 0;
 }
 
 void parse(const int& argc, char* argv[]) {
     if (argc == 1) {
-        std::cerr << "[Warning] No config file specified" << std::endl;
+        std::cerr << "[Warning] No arguments given" << std::endl;
     }
     else if (argc == 2) {
         if (!std::filesystem::exists(argv[1])) {

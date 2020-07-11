@@ -7,12 +7,14 @@
 namespace sneaky{
     class Server {
     public:
-        Server(const std::string& a_configPath);
+        Server();
+        bool init(const std::string& a_configPath);
         void start();
         const IO::Configuration& getConfig();
     private:
         IO::Configuration m_configuration;
         std::shared_ptr<IO::Net::NetworkHandler> m_networkHandler{ nullptr };
+        bool m_initialized{ false };
         void loop();
     };
 }
