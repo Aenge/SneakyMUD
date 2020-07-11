@@ -1,0 +1,1 @@
+add_library(zip "miniz.h" "zip.c" "zip.h")

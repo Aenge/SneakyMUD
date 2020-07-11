@@ -31,6 +31,10 @@ target_link_directories(SneakyLib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 add_subdirectory("include/external/yaml")
 target_link_libraries(SneakyLib PUBLIC yaml-cpp)
 
+#zip
+add_subdirectory("include/external/zip")
+target_link_libraries(SneakyLib PUBLIC zip)
+
 add_executable(${CMAKE_PROJECT_NAME} "src/SneakyMUD.cpp")
 target_link_libraries(${CMAKE_PROJECT_NAME} SneakyLib)
 
