@@ -45,11 +45,6 @@ static unsigned round_up(unsigned n, unsigned incr) {
   return n + (incr - n % incr) % incr;
 }
 
-static unsigned round_up_skip(unsigned n, unsigned incr) {
-    return (incr - n % incr) % incr;
-}
-
-
 static unsigned checksum(const mtar_raw_header_t* rh) {
   unsigned i;
   unsigned char *p = (unsigned char*) rh;
@@ -292,9 +287,8 @@ int mtar_read_header(mtar_t *tar, mtar_header_t *h) {
   return raw_to_header(h, &rh);
 }
 
-void mtar_skip_pad(mtar_t* tar, unsigned size) {
-
-    int amount = round_up_skip(size, 512);
+void mtar_skip(mtar_t* tar) {
+    int amount = round_up(tar->remaining_data + tar->pos, 512) - tar->pos;
     tar->ignore(tar, amount);
     tar->pos += amount;
     tar->remaining_data = 0;
