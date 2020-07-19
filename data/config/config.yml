@@ -1,9 +1,12 @@
 #General
   name: SneakyMud
-  player_limit: 100 #(int) Max simultaneous players allowed
+  player_limit: 100  #(int) Max simultaneous players allowed
 #Network (net_)
   net_protocol: 235  #(int) Client version to be compatible with
-  net_port: 43594   #(int) Port to listen on
+  net_port: 43594    #(int) Port to listen on
 #Definitions (def_)
-  def_npc: ../def/npc/authentic.yml         #(str) Path to npc definition file
-  def_scenery: ../def/scenery/authentic.yml #(str) Path to scenery definition file
+  def_npc: ../def/npc/authentic.tar.bz2             #(str) Path to npc definition file
+  def_scenery: ../def/scenery/authentic.tar.bz2     #(str) Path to scenery definition file
+  def_landscape: ../def/landscape/authentic.tar.bz2 #(str) Path to landscape definition file
+#Content (con_)
+  con_members: true  #(bool) Enables members content

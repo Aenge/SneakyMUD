@@ -16,6 +16,8 @@ Server::Server() {
 
 bool Server::init(const std::string& a_configPath) {
     bool fatal = false;
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
     checkpath("config file", a_configPath, fatal);
 
     if (!fatal && !a_configPath.empty()) {
@@ -24,8 +26,8 @@ bool Server::init(const std::string& a_configPath) {
     }
 
     //Network
-    if (m_configuration.NETWORK_PROTOCOL == IO::Net::Protocol::p235) {
-        m_networkHandler = std::make_shared<IO::Net::Net235>(m_configuration.NETWORK_PORT, m_configuration.SERVER_PLAYER_LIMIT);
+    if (m_configuration.NET_PROTOCOL == IO::Net::Protocol::p235) {
+        m_networkHandler = std::make_shared<IO::Net::Net235>(m_configuration.NET_PORT, m_configuration.SERVER_PLAYER_LIMIT);
     }
     else {
         std::cerr << "[Error] No valid network protocol specified" << std::endl;
@@ -35,10 +37,13 @@ bool Server::init(const std::string& a_configPath) {
     //Definitions
     checkpath("NPC definitions", m_configuration.DEF_NPC, fatal);
     checkpath("scenery definitions", m_configuration.DEF_SCENERY, fatal);
+    checkpath("landscape definitions", m_configuration.DEF_LANDSCAPE, fatal);
 
-    if (!fatal)
+    if (!fatal) {
         m_initialized = true;
+    }
 
+    std::filesystem::current_path(currentPath);
     return !fatal;
 }
 void Server::loop() {
@@ -55,7 +60,7 @@ void Server::start() {
 
     std::thread t(
         [this]() {
-            std::cout << "[" << m_configuration.SERVER_NAME << "] Starting on port " << m_configuration.NETWORK_PORT << std::endl;
+            std::cout << "[" << m_configuration.SERVER_NAME << "] Starting on port " << m_configuration.NET_PORT << std::endl;
             try {
                 m_networkHandler->listen();
                 m_networkHandler->getIOService()->run();

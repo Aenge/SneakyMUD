@@ -14,11 +14,15 @@ namespace IO {
 		int SERVER_PLAYER_LIMIT{ 100 };
 
 		//Network
-		Net::Protocol NETWORK_PROTOCOL{ Net::Protocol::p235 };
-		int NETWORK_PORT{ 43594 };
+		Net::Protocol NET_PROTOCOL{ Net::Protocol::p235 };
+		int NET_PORT{ 43594 };
 
 		//Definitions
 		std::string DEF_NPC{ "" };
 		std::string DEF_SCENERY{ "" };
+		std::string DEF_LANDSCAPE{ "" };
+
+		//Content
+		bool CON_MEMBERS{ false };
 	};
 } }

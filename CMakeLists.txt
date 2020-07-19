@@ -15,7 +15,10 @@ list(APPEND SOURCE_FILES
 	"src/IO/Net/PIDContainer.cpp"
 	"src/IO/Net/Connection.cpp"
 	"src/IO/Net/NetworkHandler.cpp"
+	"src/IO/File/Archive.cpp"
 	"src/World/World.cpp"
+	"src/World/Landscape/Sector.cpp"
+	"src/World/Landscape/SectorManager.cpp"
 	"src/World/Entity/Entity.cpp"
 	"src/World/Entity/StaticEntity.cpp"
 	"src/World/Entity/Location.cpp"
@@ -31,9 +34,13 @@ target_link_directories(SneakyLib PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 add_subdirectory("include/external/yaml")
 target_link_libraries(SneakyLib PUBLIC yaml-cpp)
 
-#zip
-add_subdirectory("include/external/zip")
-target_link_libraries(SneakyLib PUBLIC zip)
+#gzip
+add_subdirectory("include/external/gzip")
+target_link_libraries(SneakyLib PUBLIC gzip)
+
+#tar
+add_subdirectory("include/external/tar")
+target_link_libraries(SneakyLib PUBLIC tar)
 
 add_executable(${CMAKE_PROJECT_NAME} "src/SneakyMUD.cpp")
 target_link_libraries(${CMAKE_PROJECT_NAME} SneakyLib)

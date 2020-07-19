@@ -1,0 +1,1 @@
+add_library(tar STATIC "microtar.h" "microtar.c")

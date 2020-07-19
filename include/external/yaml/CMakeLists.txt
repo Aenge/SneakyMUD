@@ -17,7 +17,7 @@ include(CTest)
 
 find_program(YAML_CPP_CLANG_FORMAT_EXE NAMES clang-format)
 
-option(YAML_CPP_BUILD_CONTRIB "Enable yaml-cpp contrib in library" ON)
+option(YAML_CPP_BUILD_CONTRIB "Enable yaml-cpp contrib in library" OFF)
 option(YAML_CPP_BUILD_TOOLS "Enable parse tools" ON)
 option(YAML_BUILD_SHARED_LIBS "Build yaml-cpp shared library" ${BUILD_SHARED_LIBS})
 
@@ -48,15 +48,42 @@ if (NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
     MultiThreaded$<$<CONFIG:Debug>:Debug>$<${msvc-shared_rt}:DLL>)
 endif()
 
-set(contrib-pattern "src/contrib/*.cpp")
-set(src-pattern "src/*.cpp")
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   list(INSERT contrib-pattern 0 CONFIGURE_DEPENDS)
   list(INSERT src-pattern 0 CONFIGURE_DEPENDS)
 endif()
 
-file(GLOB yaml-cpp-contrib-sources ${contrib-pattern})
-file(GLOB yaml-cpp-sources ${src-pattern})
+set(yaml-cpp-sources 
+    "src/binary.cpp"
+    "src/convert.cpp"
+    "src/depthguard.cpp"
+    "src/directives.cpp"
+    "src/emit.cpp"
+    "src/emitfromevents.cpp"
+    "src/emitter.cpp"
+    "src/emitterstate.cpp"
+    "src/emitterutils.cpp"
+    "src/exceptions.cpp"
+    "src/exp.cpp"
+    "src/memory.cpp"
+    "src/node.cpp"
+    "src/node_data.cpp"
+    "src/nodebuilder.cpp"
+    "src/nodeevents.cpp"
+    "src/null.cpp"
+    "src/ostream_wrapper.cpp"
+    "src/parse.cpp"
+    "src/parser.cpp"
+    "src/regex_yaml.cpp"
+    "src/scanner.cpp"
+    "src/scanscalar.cpp"
+    "src/scantag.cpp"
+    "src/scantoken.cpp"
+    "src/simplekey.cpp"
+    "src/singledocparser.cpp"
+    "src/stream.cpp"
+    "src/tag.cpp"
+)
 
 set(msvc-rt $<TARGET_PROPERTY:MSVC_RUNTIME_LIBRARY>)
 
