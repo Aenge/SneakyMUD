@@ -9,6 +9,7 @@ int callback_read(mtar_t* tar, void* data, unsigned int size) {
 		return MTAR_ESUCCESS;
 
 	return MTAR_EREADFAIL;
+	
 }
 
 int callback_close(mtar_t* tar) {
@@ -20,14 +21,14 @@ void callback_ignore(mtar_t* tar, unsigned size) {
 }
 
 //Used for iterating through .tar.gz archives
-Archive::Archive() : m_tarball(), m_entry() {
+ArchiveReader::ArchiveReader() : m_tarball(), m_entry() {
 }
 
-Archive::~Archive() {
+ArchiveReader::~ArchiveReader() {
 	close();
 }
 
-bool Archive::next() {
+bool ArchiveReader::next() {
 	mtar_skip(&m_tarball);
 	int err = mtar_read_header(&m_tarball, &m_entry);
 	
@@ -37,6 +38,8 @@ bool Archive::next() {
 			delete m_data;
 		m_data = new std::byte[m_entry.size]();
 		mtar_read_data(&m_tarball, m_data, m_entry.size);
+
+		m_datastream.wrap(m_data, m_entry.size);
 		return true;
 	}
 	else if (err != MTAR_ENULLRECORD) {
@@ -47,7 +50,7 @@ bool Archive::next() {
 	return false;
 }
 
-void Archive::close() {
+void ArchiveReader::close() {
 	mtar_close(&m_tarball);
 	m_stream.close();
 	m_archive.clear();
@@ -57,17 +60,22 @@ void Archive::close() {
 	}
 }
 
-mtar_header_t* Archive::getEntryHeader()
+mtar_header_t* ArchiveReader::getEntryHeader()
 {
 	return &m_entry;
 }
 
-std::byte* Archive::getEntryData()
+std::byte* ArchiveReader::getEntryData()
 {
 	return m_data;
 }
 
-bool Archive::load(std::string a_filename) {
+sneaky::IO::ByteStream* ArchiveReader::getDataStream()
+{
+	return &m_datastream;
+}
+
+bool ArchiveReader::load(const std::string& a_filename) {
 	if (std::filesystem::exists(a_filename)) {
 		m_archive = std::filesystem::path(a_filename);
 		m_stream.open(a_filename.data());

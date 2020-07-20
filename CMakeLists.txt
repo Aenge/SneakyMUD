@@ -1,6 +1,6 @@
 ﻿#Top level CMakeLists.txt
 cmake_minimum_required (VERSION 3.8)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project ("SneakyMUD")
@@ -11,11 +11,12 @@ list(APPEND SOURCE_FILES
 	"src/Event/Event.cpp"
 	"src/IO/IOHandler.cpp"
 	"src/IO/Configuration.cpp"
+	"src/IO/ByteStream.cpp"
 	"src/IO/Net/Net235.cpp"
 	"src/IO/Net/PIDContainer.cpp"
 	"src/IO/Net/Connection.cpp"
 	"src/IO/Net/NetworkHandler.cpp"
-	"src/IO/File/Archive.cpp"
+	"src/IO/File/ArchiveReader.cpp"
 	"src/World/World.cpp"
 	"src/World/Landscape/Sector.cpp"
 	"src/World/Landscape/SectorManager.cpp"
