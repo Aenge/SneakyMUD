@@ -65,3 +65,7 @@ int8_t ByteStream::readSignedByte() {
 uint8_t ByteStream::readUnsignedByte() {
 	return static_cast<uint8_t>(m_buf[m_pos++]);
 }
+
+void ByteStream::skip(const int& a_amount) {
+	m_pos += a_amount;
+}

@@ -287,12 +287,9 @@ int mtar_read_header(mtar_t *tar, mtar_header_t *h) {
   return raw_to_header(h, &rh);
 }
 
-void mtar_skip(mtar_t* tar) {
-    int amount = round_up(tar->remaining_data + tar->pos, 512) - tar->pos;
+void mtar_ignore(mtar_t* tar, unsigned amount) {
     tar->ignore(tar, amount);
     tar->pos += amount;
-    tar->remaining_data = 0;
-
 }
 
 int mtar_read_data(mtar_t *tar, void *ptr, unsigned size) {

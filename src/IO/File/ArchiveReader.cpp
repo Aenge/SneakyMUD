@@ -3,6 +3,10 @@
 
 using namespace sneaky::IO::File;
 
+static unsigned round_up(unsigned& n, const unsigned& incr) {
+	return n + (incr - n % incr) % incr;
+}
+
 int callback_read(mtar_t* tar, void* data, unsigned int size) {
 	static_cast<gzip::igzstream*>(tar->stream)->read((char*)data, size);
 	if (static_cast<gzip::igzstream*>(tar->stream))
@@ -28,16 +32,16 @@ ArchiveReader::~ArchiveReader() {
 	close();
 }
 
-bool ArchiveReader::next() {
-	mtar_skip(&m_tarball);
+bool ArchiveReader::next() {	
 	int err = mtar_read_header(&m_tarball, &m_entry);
 	
 	if (err == MTAR_ESUCCESS) {
 		m_tarball.remaining_data = m_entry.size;
 		if (m_data != nullptr)
 			delete m_data;
-		m_data = new std::byte[m_entry.size]();
-		mtar_read_data(&m_tarball, m_data, m_entry.size);
+		int amount = round_up(m_entry.size, static_cast<unsigned>(512));
+		m_data = new std::byte[amount]();
+		mtar_read_data(&m_tarball, m_data, amount);
 
 		m_datastream.wrap(m_data, m_entry.size);
 		return true;
@@ -51,9 +55,11 @@ bool ArchiveReader::next() {
 }
 
 void ArchiveReader::close() {
-	mtar_close(&m_tarball);
 	m_stream.close();
 	m_archive.clear();
+	if (m_tarball.close != nullptr) {
+		mtar_close(&m_tarball);
+	}
 	if (m_data != nullptr) {
 		delete m_data;
 		m_data = nullptr;
@@ -79,13 +85,13 @@ bool ArchiveReader::load(const std::string& a_filename) {
 	if (std::filesystem::exists(a_filename)) {
 		m_archive = std::filesystem::path(a_filename);
 		m_stream.open(a_filename.data());
-
+		
 		if (!m_stream.good()) {
 			m_stream.close();
 			m_archive.clear();
 			return false;
 		}
-		
+
 		memset(&m_tarball, 0, sizeof(m_tarball));
 		m_tarball.stream = &m_stream;
 		m_tarball.noseek = 1;

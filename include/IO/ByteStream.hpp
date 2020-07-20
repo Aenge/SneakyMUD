@@ -10,6 +10,7 @@ public:
 	void wrap(std::byte* a_buf, int a_size);
 	int8_t readSignedByte();
 	uint8_t readUnsignedByte();
+	void skip(const int& amount);
 	std::function<int16_t(void)> readSignedShort;
 	std::function<uint16_t(void)> readUnsignedShort;
 	std::function<int32_t(void)> readSignedInt;
