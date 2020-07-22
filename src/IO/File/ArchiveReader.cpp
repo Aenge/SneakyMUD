@@ -36,10 +36,10 @@ bool ArchiveReader::next() {
 	int err = mtar_read_header(&m_tarball, &m_entry);
 	
 	if (err == MTAR_ESUCCESS) {
-		m_tarball.remaining_data = m_entry.size;
 		if (m_data != nullptr)
 			delete m_data;
-		int amount = round_up(m_entry.size, static_cast<unsigned>(512));
+
+		int amount = round_up(m_entry.size, TAR_BLOCK_SIZE);
 		m_data = new std::byte[amount]();
 		mtar_read_data(&m_tarball, m_data, amount);
 

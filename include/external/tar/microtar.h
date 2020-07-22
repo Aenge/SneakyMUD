@@ -17,7 +17,7 @@ extern "C"
 #include <stdlib.h>
 
 #define MTAR_VERSION "0.1.0"
-
+	static const unsigned TAR_BLOCK_SIZE = 512;
 enum {
   MTAR_ESUCCESS     =  0,
   MTAR_EFAILURE     = -1,

@@ -1,5 +1,6 @@
 #pragma once
 #include "Net/NetworkHandler.hpp"
+#include <filesystem>
 #include <string>
 
 namespace sneaky {
@@ -8,6 +9,7 @@ namespace IO {
 	public:
 		Configuration();
 		bool load(const std::string& a_path);
+		std::filesystem::path FILE_PATH{ "" };
 
 		//General
 		std::string SERVER_NAME{ "SneakyMUD" };

@@ -12,6 +12,8 @@ Configuration::Configuration() {
 
 bool Configuration::load(const std::string& a_path) {
 	try {
+		FILE_PATH = std::filesystem::path(a_path);
+
 		YAML::Node config = YAML::LoadFile(a_path);
 		YAML::Node node;
 		//General
