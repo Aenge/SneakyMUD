@@ -7,6 +7,7 @@
 #Definitions (def_)
   def_npc: ../def/npc/authentic.tar.bz2             #(str) Path to npc definition file
   def_scenery: ../def/scenery/authentic.tar.bz2     #(str) Path to scenery definition file
-  def_landscape: ../def/landscape/authentic.tar.bz2 #(str) Path to landscape definition file
+  def_landscape: ../def/landscape/authentic.tar.gz  #(str) Path to free landscape data
+
 #Content (con_)
   con_members: true  #(bool) Enables members content

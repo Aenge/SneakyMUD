@@ -1,6 +1,7 @@
 #include "../include/Server.hpp"
 #include "../include/IO/Net/NetworkHandler.hpp"
 #include "../include/IO/Net/Net235.hpp"
+#include "../include/IO/File/ArchiveReader.hpp"
 #include <iostream>
 #include <string>
 #include <thread>
@@ -15,28 +16,36 @@ Server::Server() {
 }
 
 bool Server::init(const std::string& a_configPath) {
-    //Check for supplied config file
-    if (a_configPath.empty()) {
-        std::cout << "[Warning] No config file specified" << std::endl;
-    }
-    else if (!std::filesystem::exists(a_configPath)) {
-        std::cout << "[Error] Specified config file cannot be found" << std::endl;
-        return false;
-    }
-    else {
-        if (!m_configuration.load(a_configPath))
+    try {
+        //Check for supplied config file
+        if (a_configPath.empty()) {
+            std::cout << "[Warning] No config file specified" << std::endl;
+        }
+        else if (!std::filesystem::exists(a_configPath)) {
+            std::cout << "[Error] Specified config file cannot be found" << std::endl;
             return false;
+        }
+        else {
+            if (!m_configuration.load(a_configPath))
+                return false;
+        }
+
+        if (!processConfig())
+            return false;
+
+        m_initialized = true;
     }
-
-    if (!processConfig())
+    catch (std::exception& a) {
+        std::cerr << a.what() << std::endl;
         return false;
-
-    m_initialized = true;
+    }
     return true;
 }
 
 bool Server::processConfig() {
     std::filesystem::path configDirectory = m_configuration.FILE_PATH.parent_path();
+
+    //TODO Map protocol to type and avoid a chain of if statements
     //Network
     if (m_configuration.NET_PROTOCOL == IO::Net::Protocol::p235) {
         m_networkHandler = std::make_shared<IO::Net::Net235>(m_configuration.NET_PORT, m_configuration.SERVER_PLAYER_LIMIT);
@@ -55,6 +64,29 @@ bool Server::processConfig() {
         return false;
     }
     else {
+        IO::File::ArchiveReader archiveReader;
+        if (!archiveReader.load(configDirectory / m_configuration.DEF_LANDSCAPE)) {
+            std::cout << "[Error] Could not load landscape definition" << std::endl;
+            return false;
+        }
+            
+        while (archiveReader.next()) {           
+            if (archiveReader.getEntryHeader()->name[0] == 'm' && !m_configuration.CON_MEMBERS) {
+                continue;
+            }
+
+            uint8_t floor = archiveReader.getEntryHeader()->name[1] - '0';
+            uint8_t xSector = (archiveReader.getEntryHeader()->name[2] - '0') * 10;
+            xSector += (archiveReader.getEntryHeader()->name[3] - '0');
+            uint8_t ySector = (archiveReader.getEntryHeader()->name[4] - '0') * 10;
+            ySector += (archiveReader.getEntryHeader()->name[5] - '0');
+             
+            if (!m_world.getSectorManager().loadSector(floor, xSector, ySector, archiveReader.getDataStream()))
+            {
+                std::cout << "[Error] Could not load " << archiveReader.getEntryHeader()->name << std::endl;
+               return false;
+            }
+        }
     }
 
     if (m_configuration.DEF_SCENERY.empty()) {

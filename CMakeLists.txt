@@ -18,6 +18,7 @@ list(APPEND SOURCE_FILES
 	"src/IO/Net/NetworkHandler.cpp"
 	"src/IO/File/ArchiveReader.cpp"
 	"src/World/World.cpp"
+	"src/World/Landscape/Tile.cpp"
 	"src/World/Landscape/Sector.cpp"
 	"src/World/Landscape/SectorManager.cpp"
 	"src/World/Entity/Entity.cpp"

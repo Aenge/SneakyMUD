@@ -15,10 +15,11 @@ public:
 	std::function<uint16_t(void)> readUnsignedShort;
 	std::function<int32_t(void)> readSignedInt;
 	std::function<uint32_t(void)> readUnsignedInt;
+	const int& getPos();
+	const int& getLen();
 private:
 	std::byte* m_buf{ nullptr };
 	int m_len{ 0 };
 	int m_pos{ 0 };
 };
-}
-}
+}}

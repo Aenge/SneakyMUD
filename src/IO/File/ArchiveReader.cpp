@@ -42,7 +42,6 @@ bool ArchiveReader::next() {
 		int amount = round_up(m_entry.size, TAR_BLOCK_SIZE);
 		m_data = new std::byte[amount]();
 		mtar_read_data(&m_tarball, m_data, amount);
-
 		m_datastream.wrap(m_data, m_entry.size);
 		return true;
 	}
@@ -55,11 +54,11 @@ bool ArchiveReader::next() {
 }
 
 void ArchiveReader::close() {
-	m_stream.close();
-	m_archive.clear();
 	if (m_tarball.close != nullptr) {
 		mtar_close(&m_tarball);
 	}
+	m_stream.close();
+	m_archive.clear();
 	if (m_data != nullptr) {
 		delete m_data;
 		m_data = nullptr;
@@ -76,15 +75,15 @@ std::byte* ArchiveReader::getEntryData()
 	return m_data;
 }
 
-sneaky::IO::ByteStream* ArchiveReader::getDataStream()
+sneaky::IO::ByteStream& ArchiveReader::getDataStream()
 {
-	return &m_datastream;
+	return m_datastream;
 }
 
-bool ArchiveReader::load(const std::string& a_filename) {
-	if (std::filesystem::exists(a_filename)) {
-		m_archive = std::filesystem::path(a_filename);
-		m_stream.open(a_filename.data());
+bool ArchiveReader::load(const std::filesystem::path& a_file) {
+	if (std::filesystem::exists(a_file)) {
+		m_archive = std::filesystem::path(a_file);
+		m_stream.open(a_file.string().data());
 		
 		if (!m_stream.good()) {
 			m_stream.close();
@@ -92,6 +91,7 @@ bool ArchiveReader::load(const std::string& a_filename) {
 			return false;
 		}
 
+		memset(&m_entry, 0, sizeof(m_entry));
 		memset(&m_tarball, 0, sizeof(m_tarball));
 		m_tarball.stream = &m_stream;
 		m_tarball.noseek = 1;

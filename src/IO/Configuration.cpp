@@ -19,7 +19,7 @@ bool Configuration::load(const std::string& a_path) {
 		//General
 		if (node = config["name"]) SERVER_NAME = node.as<std::string>();
 		if (node = config["player_limit"]) SERVER_PLAYER_LIMIT = node.as<int>();
-
+		
 		//Network
 		if (node = config["net_protocol"]) NET_PROTOCOL = static_cast<Net::Protocol>(node.as<int>());
 		if (node = config["net_port"]) NET_PORT = node.as<int>();

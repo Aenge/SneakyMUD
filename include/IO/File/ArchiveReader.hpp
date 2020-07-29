@@ -15,11 +15,11 @@ namespace File {
 		ArchiveReader();
 		~ArchiveReader();
 		bool next();
-		bool load(const std::string& a_filename);
+		bool load(const std::filesystem::path& a_filename);
 		void close();
 		mtar_header_t* getEntryHeader();
 		std::byte* getEntryData();
-		ByteStream* getDataStream();
+		ByteStream& getDataStream();
 	private:
 		std::filesystem::path m_archive;
 		gzip::igzstream m_stream;
