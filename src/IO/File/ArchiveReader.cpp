@@ -40,7 +40,7 @@ bool ArchiveReader::next() {
 			delete m_data;
 
 		int amount = round_up(m_entry.size, TAR_BLOCK_SIZE);
-		m_data = new std::byte[amount]();
+		m_data = new uint8_t[amount]();
 		mtar_read_data(&m_tarball, m_data, amount);
 		m_datastream.wrap(m_data, m_entry.size);
 		return true;
@@ -70,7 +70,7 @@ mtar_header_t* ArchiveReader::getEntryHeader()
 	return &m_entry;
 }
 
-std::byte* ArchiveReader::getEntryData()
+uint8_t* ArchiveReader::getEntryData()
 {
 	return m_data;
 }

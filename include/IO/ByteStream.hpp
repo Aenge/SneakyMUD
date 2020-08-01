@@ -7,7 +7,7 @@ namespace IO {
 class ByteStream {
 public:
 	ByteStream();
-	void wrap(std::byte* a_buf, int a_size);
+	void wrap(uint8_t* a_buf, int a_size);
 	int8_t readSignedByte();
 	uint8_t readUnsignedByte();
 	void skip(const int& amount);
@@ -18,7 +18,7 @@ public:
 	const int& getPos();
 	const int& getLen();
 private:
-	std::byte* m_buf{ nullptr };
+	uint8_t* m_buf{ nullptr };
 	int m_len{ 0 };
 	int m_pos{ 0 };
 };

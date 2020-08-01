@@ -18,14 +18,14 @@ namespace File {
 		bool load(const std::filesystem::path& a_filename);
 		void close();
 		mtar_header_t* getEntryHeader();
-		std::byte* getEntryData();
+		uint8_t* getEntryData();
 		ByteStream& getDataStream();
 	private:
 		std::filesystem::path m_archive;
 		gzip::igzstream m_stream;
 		mtar_t m_tarball;
 		mtar_header_t m_entry;
-		std::byte* m_data{ nullptr };
+		uint8_t* m_data{ nullptr };
 		ByteStream m_datastream;
 	};
 }

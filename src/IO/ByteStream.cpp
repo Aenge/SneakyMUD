@@ -3,36 +3,36 @@
 using namespace sneaky::IO;
 
 template <typename T>
-T readShortLE(std::byte* a_buf, int& a_pos)
+T readShortLE(uint8_t* a_buf, int& a_pos)
 {
-	T retval = static_cast<uint8_t>(a_buf[a_pos++]);
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]) << 8;
-	return retval;
+	uint16_t retval = a_buf[a_pos++];
+	retval |= a_buf[a_pos++] << 8;
+	return static_cast<T>(retval);
 }
 template <typename T>
-T readShortBE(std::byte* a_buf, int& a_pos)
+T readShortBE(uint8_t* a_buf, int& a_pos)
 {
-	T retval = static_cast<uint8_t>(a_buf[a_pos++]) << 8;
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]);
-	return retval;
+	uint16_t retval = a_buf[a_pos++] << 8;
+	retval |= a_buf[a_pos++];
+	return static_cast<T>(retval);
 }
 template <typename T>
-T readIntLE(std::byte* a_buf, int& a_pos)
+T readIntLE(uint8_t* a_buf, int& a_pos)
 {
-	T retval = static_cast<uint8_t>(a_buf[a_pos++]);
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]) << 8;
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]) << 16;
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]) << 24;
-	return retval;
+	uint32_t retval = a_buf[a_pos++];
+	retval |= a_buf[a_pos++] << 8;
+	retval |= a_buf[a_pos++] << 16;
+	retval |= a_buf[a_pos++] << 24;
+	return static_cast<T>(retval);
 }
 template <typename T>
-T readIntBE(std::byte* a_buf, int& a_pos)
+T readIntBE(uint8_t* a_buf, int& a_pos)
 {
-	T retval = static_cast<uint8_t>(a_buf[a_pos++]) << 24;
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]) << 16;
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]) << 8;
-	retval |= static_cast<uint8_t>(a_buf[a_pos++]);
-	return retval;
+	uint32_t retval = a_buf[a_pos++] << 24;
+	retval |= a_buf[a_pos++] << 16;
+	retval |= a_buf[a_pos++] << 8;
+	retval |= a_buf[a_pos++];
+	return static_cast<T>(retval);
 }
 ByteStream::ByteStream()
 {
@@ -53,7 +53,7 @@ ByteStream::ByteStream()
 	}
 }
 
-void ByteStream::wrap(std::byte* a_buf, int a_size) {
+void ByteStream::wrap(uint8_t* a_buf, int a_size) {
 	m_buf = a_buf;
 	m_len = a_size;
 	m_pos = 0;
